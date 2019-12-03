@@ -18,11 +18,9 @@ import org.hc.demo.gateway.service.IVersionService;
 import org.hc.demo.utils.JsonUtils;
 import org.hc.demo.utils.RestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,9 +54,6 @@ public class GatewayRouteController {
     @Autowired
     private IRouteService routeService;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
     @RequestMapping(value = "/version", method = RequestMethod.POST)
     @ResponseBody
     public Object addVersion(ModelMap map) {
@@ -85,16 +80,8 @@ public class GatewayRouteController {
     @RequestMapping(value = "/version/lastVersion", method = RequestMethod.GET)
     @ResponseBody
     public Object getLastVersion() {
-        Long versionId = 0L;
-        String result = redisTemplate.opsForValue().get(versionKey);
-        if (!StringUtils.isEmpty(result)) {
-            System.out.println("返回 redis 中的版本信息......");
-            versionId = Long.valueOf(result);
-        } else {
-            System.out.println("返回 mysql 中的版本信息......");
-            versionId = versionService.lastVersion();
-            redisTemplate.opsForValue().set(versionKey, String.valueOf(versionId));
-        }
+
+        Long versionId = versionService.lastVersion();
 
         return RestUtils.buildRes(versionId);
     }
@@ -114,17 +101,9 @@ public class GatewayRouteController {
     @RequestMapping("/routes")
     @ResponseBody
     public Object getRouteDefinitions() {
-        // 先从redis中取，再从mysql中取
-        String result = redisTemplate.opsForValue().get(routeKey);
-        if (!StringUtils.isEmpty(result)) {
-            System.out.println("返回 redis 中的路由信息......");
-        } else {
-            System.out.println("返回 mysql 中的路由信息......");
-            result = JsonUtils.objectToJson(routeService.getRouteDefinitions(true));
-            // 再set到redis
-            redisTemplate.opsForValue().set(routeKey, result);
-        }
-        System.out.println("路由信息：" + result);
+
+        String result = JsonUtils.objectToJson(routeService.getRouteDefinitions(true));
+
         return result;
     }
 

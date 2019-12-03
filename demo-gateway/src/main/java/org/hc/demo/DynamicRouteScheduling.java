@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hc.demo.dto.GatewayFilterDefinition;
-import org.hc.demo.dto.GatewayPredicateDefinition;
-import org.hc.demo.dto.GatewayRouteDefinition;
+import org.hc.demo.gateway.dto.GatewayFilterDefinition;
+import org.hc.demo.gateway.dto.GatewayPredicateDefinition;
+import org.hc.demo.gateway.dto.GatewayRouteDefinition;
 import org.hc.demo.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.FilterDefinition;

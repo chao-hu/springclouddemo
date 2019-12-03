@@ -6,10 +6,9 @@
 		<artifactId>springcloud</artifactId>
 		<version>1.0</version>
 	</parent>
-	<artifactId>demo-config</artifactId>
+	<artifactId>demo-manage-gateway</artifactId>
 
 	<dependencies>
-	
 		<dependency>
 			<groupId>org.hc.demo</groupId>
 			<artifactId>demo-common</artifactId>
@@ -20,12 +19,8 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -36,8 +31,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -49,6 +49,7 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<resources>
@@ -57,7 +58,6 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -77,6 +77,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 </project>
