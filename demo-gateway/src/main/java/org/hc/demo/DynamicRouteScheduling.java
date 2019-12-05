@@ -35,7 +35,7 @@ public class DynamicRouteScheduling {
     @Autowired
     private DynamicRouteService dynamicRouteService;
 
-    private static final String dynamicRouteServerName = "demo-gateway-manager";
+    private static final String dynamicRouteServerName = "demo-manager";
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -69,11 +69,11 @@ public class DynamicRouteScheduling {
             return;
         }
 
-        String versionUri = uri + "/gateway-manager/version/lastVersion";
-        String routeUri = uri + "/gateway-manager/routes";
+        String versionUri = uri + "/manager/version/lastVersion";
+        String routeUri = uri + "/manager/routes";
 
         try {
-            logger.info("正在拉取");
+            logger.info("正在拉取" + versionUri + " " + routeUri);
 
             // 先拉取版本信息，如果版本号不想等则更新路由
             ApiResult result = WebClient.create().get().uri(versionUri).retrieve().bodyToMono(ApiResult.class).block();
