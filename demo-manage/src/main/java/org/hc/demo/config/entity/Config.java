@@ -6,7 +6,7 @@
  * @date 2019年11月27日
  * @version V1.0
  */
-package org.hc.demo.entity;
+package org.hc.demo.config.entity;
 
 import java.math.BigInteger;
 

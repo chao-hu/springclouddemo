@@ -12,7 +12,7 @@
 		<module>demo-common</module>
 		<module>demo-config</module>
 		<module>demo-gateway</module>
-		<module>demo-manage-gateway</module>
+		<module>demo-manage</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
