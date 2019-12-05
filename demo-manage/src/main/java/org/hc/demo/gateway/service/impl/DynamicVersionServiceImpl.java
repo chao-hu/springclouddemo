@@ -59,7 +59,7 @@ public class DynamicVersionServiceImpl implements IVersionService {
 
         DynamicVersion version = dynamicVersionRepository.findTopOneByOrderByIdDesc();
 
-        return version.getId();
+        return version == null ? 0L : version.getId();
     }
 
     /**
