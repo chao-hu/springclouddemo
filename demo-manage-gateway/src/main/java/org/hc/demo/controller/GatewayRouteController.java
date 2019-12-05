@@ -10,12 +10,13 @@ package org.hc.demo.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
+import org.hc.demo.gateway.dto.GatewayRouteDefinition;
 import org.hc.demo.gateway.entity.DynamicVersion;
 import org.hc.demo.gateway.entity.GatewayRoutes;
 import org.hc.demo.gateway.service.IRouteService;
 import org.hc.demo.gateway.service.IVersionService;
-import org.hc.demo.utils.JsonUtils;
 import org.hc.demo.utils.RestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -102,9 +103,21 @@ public class GatewayRouteController {
     @ResponseBody
     public Object getRouteDefinitions() {
 
-        String result = JsonUtils.objectToJson(routeService.getRouteDefinitions(true));
+        int code = 200;
+        String msg = "";
+        try {
 
-        return result;
+            List<GatewayRouteDefinition> list = routeService.getRouteDefinitions(true);
+
+            return RestUtils.buildRes(list);
+        } catch (Exception e) {
+
+            code = -1;
+            msg = "查询失败，" + e.getMessage();
+        }
+
+        return RestUtils.buildRes(code, msg);
+
     }
 
     // 打开添加路由页面

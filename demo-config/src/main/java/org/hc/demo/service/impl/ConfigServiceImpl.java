@@ -1,19 +1,11 @@
-/**
- * @Title: ConfigServiceImpl.java
- * @Package com.hc.demo.config.service.impl
- * @Description: TODO(用一句话描述该文件做什么)
- * @author huchao
- * @date 2019年12月3日
- * @version V1.0
- */
-package org.hc.demo.config.service.impl;
+package org.hc.demo.service.impl;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import org.hc.demo.config.entity.Config;
-import org.hc.demo.config.repository.ConfigRepository;
-import org.hc.demo.config.service.IConfigService;
+import org.hc.demo.entity.Config;
+import org.hc.demo.repository.ConfigRepository;
+import org.hc.demo.service.IConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

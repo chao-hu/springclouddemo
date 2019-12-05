@@ -6,12 +6,12 @@
  * @date 2019年12月3日
  * @version V1.0
  */
-package org.hc.demo.config.service;
+package org.hc.demo.service;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import org.hc.demo.config.entity.Config;
+import org.hc.demo.entity.Config;
 
 /**
  * @ClassName: IConfigService

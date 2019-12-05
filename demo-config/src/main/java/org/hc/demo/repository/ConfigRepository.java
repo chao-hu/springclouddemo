@@ -6,11 +6,11 @@
  * @date 2019年12月3日
  * @version V1.0
  */
-package org.hc.demo.config.repository;
+package org.hc.demo.repository;
 
 import java.math.BigInteger;
 
-import org.hc.demo.config.entity.Config;
+import org.hc.demo.entity.Config;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

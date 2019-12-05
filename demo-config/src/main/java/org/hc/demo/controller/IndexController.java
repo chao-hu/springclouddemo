@@ -12,8 +12,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hc.demo.config.entity.Config;
-import org.hc.demo.config.service.IConfigService;
+import org.hc.demo.entity.Config;
+import org.hc.demo.service.IConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
