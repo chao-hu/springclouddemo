@@ -32,7 +32,8 @@ public interface GatewayRoutesRepository extends JpaRepository<GatewayRoutes, In
     @Query(nativeQuery = true, value = "select * From gateway_routes where is_del != 1")
     public List<GatewayRoutes> listNotDeleted();
 
-    @Query(nativeQuery = true, value = "select * From gateway_routes where is_ebl = 1 and is_del != 1")
-    public List<GatewayRoutes> listOnlyEnableNotDeleted();
+    public List<GatewayRoutes> findByIsEblAndIsDel(boolean isEbl, boolean isDel);
+
+    public List<GatewayRoutes> findByIsEblOrIsDel(boolean isEbl, boolean isDel);
 
 }

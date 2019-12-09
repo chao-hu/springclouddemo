@@ -34,4 +34,8 @@ public interface IRouteService {
 
     public List<GatewayRouteDefinition> getRouteDefinitions(Boolean isEnable);
 
+    public List<GatewayRoutes> getGatewayRoutes(Boolean isEnable);
+
+    public void syncGatewayRouteDefinition();
+
 }

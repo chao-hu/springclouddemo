@@ -16,6 +16,7 @@ import org.hc.demo.config.service.IConfigService;
 import org.hc.demo.utils.RestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/config")
 public class ConfigController {
 
     @Autowired
     IConfigService configServiceImpl;
 
-    @RequestMapping(value = { "/", "/list" })
+    @RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
     public Object list() {
 
         List<Config> list = configServiceImpl.list();
@@ -42,8 +43,16 @@ public class ConfigController {
         return RestUtils.buildRes(list);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Object getOne(@PathVariable(name = "id", required = true) BigInteger id) {
+
+        Config config = configServiceImpl.get(id);
+
+        return RestUtils.buildRes(config);
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Object post(Config config) {
+    public Object post(@RequestBody Config config) {
         int code = 0;
         String msg = "添加成功";
 
@@ -61,7 +70,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public Object put(Config config) {
+    public Object put(@RequestBody Config config) {
         int code = 0;
         String msg = "修改成功";
         try {

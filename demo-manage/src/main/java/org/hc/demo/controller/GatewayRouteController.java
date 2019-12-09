@@ -8,8 +8,6 @@
  */
 package org.hc.demo.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.hc.demo.gateway.dto.GatewayRouteDefinition;
@@ -19,14 +17,12 @@ import org.hc.demo.gateway.service.IRouteService;
 import org.hc.demo.gateway.service.IVersionService;
 import org.hc.demo.utils.RestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @ClassName: GatewayRouteController
@@ -36,18 +32,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 
-@Controller
+@RestController
 public class GatewayRouteController {
 
     public static final String versionKey = "gateway-last-version";
     public static final String routeKey = "gateway-dynamic-route";
-
-    @RequestMapping("/hello")
-    public String hello(@RequestParam(name = "name", required = false, defaultValue = "huchao") String name, Model m) {
-
-        m.addAttribute("now", DateFormat.getDateTimeInstance().format(new Date()));
-        return "hello";
-    }
 
     @Autowired
     private IVersionService versionService;
@@ -56,10 +45,9 @@ public class GatewayRouteController {
     private IRouteService routeService;
 
     @RequestMapping(value = "/version", method = RequestMethod.POST)
-    @ResponseBody
     public Object addVersion(ModelMap map) {
 
-        int code = 200;
+        int code = 0;
         String msg = "";
         try {
 
@@ -77,9 +65,14 @@ public class GatewayRouteController {
         return RestUtils.buildRes(code, msg);
     }
 
-    // 获取最后一次发布的版本号
+    /**
+     * 获取最后一次发布的版本号
+     * @Title: getLastVersion
+     * @Description: 获取最后一次发布的版本号
+     * @return Object
+     * @throws
+     */
     @RequestMapping(value = "/version/lastVersion", method = RequestMethod.GET)
-    @ResponseBody
     public Object getLastVersion() {
 
         Long versionId = versionService.lastVersion();
@@ -87,23 +80,14 @@ public class GatewayRouteController {
         return RestUtils.buildRes(versionId);
     }
 
-    // 打开发布版本列表页面
-    @RequestMapping("/version")
-    public String listAll(ModelMap map) {
-
-        map.addAttribute("list", versionService.list());
-        return "versionlist";
-    }
-
     /**
      * 获取所有动态路由信息
      * @return
      */
     @RequestMapping("/routes")
-    @ResponseBody
     public Object getRouteDefinitions() {
 
-        int code = 200;
+        int code = 0;
         String msg = "";
         try {
 
@@ -120,19 +104,100 @@ public class GatewayRouteController {
 
     }
 
-    // 打开添加路由页面
-    @RequestMapping(value = "/routes/add", method = RequestMethod.GET)
-    public String addPage(ModelMap map) {
-        map.addAttribute("route", new GatewayRoutes());
-        return "addRoute";
+    /**
+     * 获取动态路由列表
+     * @Title: getGatewayRoutes
+     * @Description: 获取动态路由列表
+     * @return Object
+     * @throws
+     */
+    @RequestMapping("/gatewayroutes")
+    public Object getGatewayRoutes() {
+
+        int code = 0;
+        String msg = "";
+        try {
+
+            List<GatewayRoutes> list = routeService.getGatewayRoutes(null);
+
+            return RestUtils.buildRes(list);
+        } catch (Exception e) {
+
+            code = -1;
+            msg = "查询失败，" + e.getMessage();
+        }
+
+        return RestUtils.buildRes(code, msg);
+
     }
 
-    // 添加路由信息
+    /**
+     * 获取单个动态路由信息
+     * @Title: getRoute
+     * @Description: 获取单个动态路由信息
+     * @param id
+     * @return Object
+     * @throws
+     */
+    @RequestMapping("/routes/{id}")
+    public Object getRoute(@PathVariable(name = "id", required = true) Long id) {
+
+        int code = 0;
+        String msg = "";
+        try {
+
+            GatewayRoutes gatewayRoutes = routeService.get(id);
+
+            return RestUtils.buildRes(gatewayRoutes);
+        } catch (Exception e) {
+
+            code = -1;
+            msg = "查询失败，" + e.getMessage();
+        }
+
+        return RestUtils.buildRes(code, msg);
+
+    }
+
+    /**
+     * 同步路由信息
+     * @Title: syncGatewayRoutes
+     * @Description: 同步路由信息
+     * @return Object
+     * @throws
+     */
+    @RequestMapping("/routes/sync")
+    public Object syncGatewayRoutes() {
+
+        int code = 0;
+        String msg = "同步成功";
+        try {
+
+            routeService.syncGatewayRouteDefinition();
+
+            return RestUtils.buildRes(code, msg);
+        } catch (Exception e) {
+
+            code = -1;
+            msg = "同步失败，" + e.getMessage();
+        }
+
+        return RestUtils.buildRes(code, msg);
+
+    }
+
+    /**
+     * 添加路由信息
+     * @Title: add
+     * @Description: 添加路由信息
+     * @param route
+     * @return Object
+     * @throws
+     */
     @RequestMapping(value = "/routes", method = RequestMethod.POST)
-    @ResponseBody
     public Object add(@RequestBody GatewayRoutes route) {
 
-        int code = 200;
+        int code = 0;
         String msg = "";
         try {
 
@@ -148,18 +213,18 @@ public class GatewayRouteController {
         return RestUtils.buildRes(code, msg);
     }
 
-    @RequestMapping(value = "/routes/edit", method = RequestMethod.GET)
-    public String editPage(ModelMap map, Long id) {
-        map.addAttribute("route", routeService.get(id));
-        return "addRoute";
-    }
-
-    // 添加路由信息
+    /**
+     * 修改路由信息
+     * @Title: edit
+     * @Description: 修改路由信息
+     * @param route
+     * @return Object
+     * @throws
+     */
     @RequestMapping(value = "/routes", method = RequestMethod.PUT)
-    @ResponseBody
     public Object edit(@RequestBody GatewayRoutes route) {
 
-        int code = 200;
+        int code = 0;
         String msg = "";
         try {
 
@@ -175,19 +240,10 @@ public class GatewayRouteController {
         return RestUtils.buildRes(code, msg);
     }
 
-    // 打开路由列表
-    @RequestMapping("/list")
-    public String list(ModelMap map) {
-
-        map.addAttribute("list", routeService.getRouteDefinitions(null));
-        return "routelist";
-    }
-
-    @RequestMapping("/delete")
-    @ResponseBody
+    @RequestMapping(value = "/routes", method = RequestMethod.DELETE)
     public Object delete(Long id) {
 
-        int code = 200;
+        int code = 0;
         String msg = "";
         try {
 

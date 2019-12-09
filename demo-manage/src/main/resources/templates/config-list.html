@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>配置列表</title>
+	<link rel="shortcut icon" th:href="@{#}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/plugin/bootstrap/bootstrap-3.3.7/css/bootstrap.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/plugin/bootstrap/bootstrap-table/css/bootstrap-table.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/plugin/bootstrap/bootstrap-table/css/bootstrap-table-jumpto.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/plugin/message/message.css}"/> 
+	<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-content">
+            <div class="page-wrap bcloud-part">
+                <div class="bcloud-header">
+                    <div class="bcloud-header-operation pull-right">
+                        <div class="bcloud-btn-operation">
+                            <a class="btn btn-link btn-xs" id="add-config-btn">新增</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="bcloud-content">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="configTable"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 新建model -->
+    <div id="template" style="display: none;">
+        <div class="row">
+            <form>
+                <input type="hidden" name="id" />
+                <div class="form-group col-md-12 col-lg-12">
+                    <label class="col-md-12 col-lg-12">key</label>
+                    <div class="col-md-12 col-lg-12">
+                        <input type="text" class="form-control input-lg" name="key" required placeholder="请输入key" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-lg-12">
+                    <label class="col-md-12 col-lg-12">value</label>
+                    <div class="col-md-12 col-lg-12">
+                        <input type="text" class="form-control input-lg" name="value" required placeholder="请输入value" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-lg-12">
+                    <label class="col-md-12 col-lg-12">application</label>
+                    <div class="col-md-12 col-lg-12">
+                        <input type="text" class="form-control input-lg" name="application" required placeholder="请输入application" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-lg-12">
+                    <label class="col-md-12 col-lg-12">profile</label>
+                    <div class="col-md-12 col-lg-12">
+                        <input type="text" class="form-control input-lg" name="profile" required placeholder="请输入profile" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-lg-12">
+                    <label class="col-md-12 col-lg-12">label</label>
+                    <div class="col-md-12 col-lg-12">
+                        <input type="text" class="form-control input-lg" name="label" required placeholder="请输入label" autocomplete="off">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 确认框 -->
+    <div class="modal fade bs-example-modal-sm" id="deleteConfirmModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content bcloud-confirm-content">
+                <div class="modal-header bcloud-confirm-header">
+                    删除信息
+                </div>
+                <div class="modal-body bcloud-confirm-body">
+                    请问是否删除？
+                    <input type="hidden" name="deleteId" />
+                </div>
+                <div class="modal-footer bcloud-confirm-footer">
+                    <button class="btn btn-bcloud-white" data-dismiss="modal">取消</button>
+                    <button class="btn btn-bcloud-blue active">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+   /*<![CDATA[*/
+   ctxPath = /*[[@{/}]]*/ '';
+   /*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/plugin/jquery/jquery-2.0.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugin/bootstrap/bootstrap-3.3.7/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugin/bootstrap/bootstrap-table/js/bootstrap-table.js}"></script>
+<script type="text/javascript" th:src="@{/plugin/bootstrap/bootstrap-table/js/bootstrap-table-jumpto.js}"></script>
+<script type="text/javascript" th:src="@{/plugin/bootstrap/bootstrap-table/js/bootstrap-table-zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{/plugin/message/message.js}"></script>
+<script type="text/javascript" th:src="@{/js/side-model.js}"></script>
+<script type="text/javascript" th:src="@{/js/config-list.js}"></script>
+</html>
