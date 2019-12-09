@@ -135,7 +135,7 @@ public class GatewayRoutesServiceImpl implements IRouteService {
     @Override
     public GatewayRoutes get(Long id) {
 
-        return gatewayRoutesRepository.findById(id);
+        return gatewayRoutesRepository.getOne(id);
     }
 
     /**
@@ -147,7 +147,7 @@ public class GatewayRoutesServiceImpl implements IRouteService {
     @Override
     public void enableById(Long id) {
 
-        GatewayRoutes route = gatewayRoutesRepository.findById(id);
+        GatewayRoutes route = gatewayRoutesRepository.getOne(id);
         route.setEbl(true);
         gatewayRoutesRepository.save(route);
     }

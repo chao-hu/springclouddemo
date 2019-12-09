@@ -23,11 +23,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface GatewayRoutesRepository extends JpaRepository<GatewayRoutes, Integer> {
-
-    public GatewayRoutes findById(Long id);
-
-    public void deleteById(Long id);
+public interface GatewayRoutesRepository extends JpaRepository<GatewayRoutes, Long> {
 
     @Query(nativeQuery = true, value = "select * From gateway_routes where is_del != 1")
     public List<GatewayRoutes> listNotDeleted();
