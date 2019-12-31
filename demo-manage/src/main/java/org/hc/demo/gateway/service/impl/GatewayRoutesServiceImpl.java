@@ -3,6 +3,7 @@ package org.hc.demo.gateway.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @ClassName: GatewayRoutesServiceImpl
@@ -184,22 +188,32 @@ public class GatewayRoutesServiceImpl implements IRouteService {
      */
     private void syncEableGatewayRouteDefinition() {
 
+        // db中的路由
         List<GatewayRoutes> list = gatewayRoutesRepository.findByIsEblAndIsDel(true, false);
-        if (null != list && !list.isEmpty()) {
-            for (GatewayRoutes route : list) {
-                GatewayRouteDefinition grd = new GatewayRouteDefinition();
-                grd.setId(route.getRouteId());
-                grd.setUri(route.getRouteUri());
-                grd.setOrder(route.getRouteOrder());
-                if (null == route.getGatewayPredicateDefinition() || null == route.getGatewayFilterDefinition()) {
-                    throw new NullPointerException();
-                }
-                grd.setPredicates(route.getGatewayPredicateDefinition());
-                grd.setFilters(route.getGatewayFilterDefinition());
-                String url = "http://" + dynamicRouteServerName + "/actuator/gateway/routes/" + route.getRouteId();
-                String res = restTemplate.postForObject(url, grd, String.class);
-                logger.info("============================================res:" + res);
+        if (null == list || list.isEmpty()) {
+            return;
+        }
+        // 查询gateway内存中所有路由
+        List<Map<String, Object>> allList = getAllGatewayRouteDefinition();
+        for (GatewayRoutes route : list) {
+            String routeId = route.getRouteId();
+            if (null != allList && !allList.isEmpty()) {
+                // 删除原有的
+                deleteGatewayRouteDefinitionByRouteId(allList, routeId);
             }
+            GatewayRouteDefinition grd = new GatewayRouteDefinition();
+            grd.setId(routeId);
+            grd.setUri(route.getRouteUri());
+            grd.setOrder(route.getRouteOrder());
+            if (null == route.getGatewayPredicateDefinition() || null == route.getGatewayFilterDefinition()) {
+                throw new NullPointerException();
+            }
+            grd.setPredicates(route.getGatewayPredicateDefinition());
+            grd.setFilters(route.getGatewayFilterDefinition());
+            String url = "http://" + dynamicRouteServerName + "/actuator/gateway/routes/" + routeId;
+            String res = restTemplate.postForObject(url, grd, String.class);
+
+            logger.info("============================================res:" + res);
         }
     }
 
@@ -210,13 +224,57 @@ public class GatewayRoutesServiceImpl implements IRouteService {
      * @throws
      */
     private void syncDelGatewayRouteDefinition() {
-        List<GatewayRoutes> list = gatewayRoutesRepository.findByIsEblOrIsDel(false, true);
-        if (null != list && !list.isEmpty()) {
-            for (GatewayRoutes route : list) {
-                String url = "http://" + dynamicRouteServerName + "/actuator/gateway/routes/" + route.getRouteId();
-                restTemplate.delete(url);
-            }
+        // 查询gateway内存中所有路由
+        List<Map<String, Object>> allList = getAllGatewayRouteDefinition();
+        if (null == allList || allList.isEmpty()) {
+            return;
         }
+        // db中的路由
+        List<GatewayRoutes> list = gatewayRoutesRepository.findByIsEblOrIsDel(false, true);
+        if (null == list || list.isEmpty()) {
+            return;
+        }
+        for (GatewayRoutes route : list) {
+            String routeId = route.getRouteId();
+            deleteGatewayRouteDefinitionByRouteId(allList, routeId);
+        }
+    }
+
+    /**
+     * TODO 简单描述
+     * @Title: deleteGatewayRouteDefinitionByRouteId
+     * @Description: TODO详细描述
+     * @param allList
+     * @param routeId void
+     * @throws
+     */
+    private void deleteGatewayRouteDefinitionByRouteId(List<Map<String, Object>> allList, String routeId) {
+        try {
+            for (Map<String, Object> map : allList) {
+                Object obj = map.get("route_id");
+                if (null != obj && routeId.equals(obj.toString())) {
+                    String url = "http://" + dynamicRouteServerName + "/actuator/gateway/routes/" + routeId;
+                    restTemplate.delete(url);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("删除路由失败，routeId：" + routeId, e);
+        }
+    }
+
+    private List<Map<String, Object>> getAllGatewayRouteDefinition() {
+        String url = "http://" + dynamicRouteServerName + "/actuator/gateway/routes";
+        String res = restTemplate.getForObject(url, String.class);
+        logger.info("=================查询当前所有路由=====================" + res);
+        List<Map<String, Object>> list = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            list = mapper.readValue(res, new TypeReference<List<Map<String, Object>>>() {});
+        } catch (Exception e) {
+            logger.error("失败：", e);
+        }
+
+        return list;
     }
 
 }

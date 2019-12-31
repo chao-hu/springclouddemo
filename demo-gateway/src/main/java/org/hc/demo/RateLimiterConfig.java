@@ -3,6 +3,7 @@ package org.hc.demo;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import reactor.core.publisher.Mono;
 
@@ -15,7 +16,19 @@ import reactor.core.publisher.Mono;
 public class RateLimiterConfig {
 
     @Bean(value = "remoteAddrKeyResolver")
+    @Primary
     public KeyResolver remoteAddrKeyResolver() {
-        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getAddress().getHostAddress());
+        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
     }
+
+    @Bean(value = "userKeyResolver")
+    public KeyResolver userKeyResolver() {
+        return exchange -> Mono.just(exchange.getRequest().getQueryParams().getFirst("user"));
+    }
+
+    @Bean(value = "UriKeyResolver")
+    public KeyResolver UriKeyResolver() {
+        return exchange -> Mono.just(exchange.getRequest().getURI().getPath());
+    }
+
 }

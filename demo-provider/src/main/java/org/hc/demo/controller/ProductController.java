@@ -8,6 +8,9 @@
  */
 package org.hc.demo.controller;
 
+import java.util.Random;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,4 +40,20 @@ public class ProductController {
         }
         return "timeout";
     }
+
+    @GetMapping("/ah")
+    public String ah() {
+        // 模拟接口1/3的概率超时
+        Random rand = new Random();
+        int randomNum = rand.nextInt(3) + 1;
+        if (3 == randomNum) {
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return "来了老弟~";
+    }
+
 }

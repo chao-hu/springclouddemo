@@ -8,9 +8,11 @@
  */
 package org.hc.demo;
 
+import org.hc.demo.service.ISendeService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 
 /**
  * @ClassName: StartUp
@@ -21,6 +23,8 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
  */
 @SpringBootApplication
 @EnableEurekaClient
+// 绑定我们刚刚创建的发送消息的接口类型
+@EnableBinding(value = { ISendeService.class })
 public class StartUp {
 
     public static void main(String[] args) {
